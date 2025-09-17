@@ -1,55 +1,73 @@
-# Chain Reaction Game
+# 🎮 Somnia Reaction Game
 
-A modern, responsive Chain Reaction game built with React and blockchain technology, featuring local multiplayer, advanced AI opponents, social features, and beautiful animations.
+A complete blockchain-integrated strategy game built with React, featuring multiplayer gameplay, AI opponents, puzzle challenges, and on-chain leaderboards powered by Somnia Testnet.
 
-![Chain Reaction Game](https://img.shields.io/badge/React-18.2.0-blue) ![Vite](https://img.shields.io/badge/Vite-4.1.0-purple) ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.2.7-cyan) ![Blockchain](https://img.shields.io/badge/Blockchain-Somnia%20Network-green) ![Solidity](https://img.shields.io/badge/Solidity-0.8.19-orange)
+![Somnia Reaction Game](https://img.shields.io/badge/Game-Somnia%20Reaction-blue)
+![Blockchain](https://img.shields.io/badge/Blockchain-Somnia%20Testnet-green)
+![React](https://img.shields.io/badge/Framework-React-61dafb)
+![Solidity](https://img.shields.io/badge/Smart%20Contract-Solidity-363636)
 
-## 🎮 Features
+## 🚀 Features
 
-### Core Gameplay
-- **Classic Chain Reaction mechanics** - Place orbs, trigger explosions, create chain reactions
-- **Multiplayer support** - 2-8 players on the same device
-- **Advanced AI opponent** - Chess-like strategic thinking with minimax algorithm
-- **Flexible board sizes** - From small (6×8) to extra large (12×10)
-- **Customizable explosion capacity** - 3, 4, or 5 orbs per cell
-- **Real-time scoring** - Track territory control and player statistics
+### 🎯 Core Gameplay
+- **Strategic Board Game**: Classic chain reaction mechanics with modern UI
+- **Multiple Game Modes**: VS AI, Local Multiplayer, Online Multiplayer, Puzzle Mode
+- **Progressive Difficulty**: 5 learning levels with adaptive AI
+- **Real-time Statistics**: Track explosions, chain reactions, and performance
 
-### 🚀 Blockchain Integration
-- **User Registration** - Unique nickname registration on Somnia Network
-- **Social System** - Friend requests, user search, and friend management
-- **Achievement System** - Unlock achievements and earn points
-- **Tier Progression** - 5-tier system based on total points
-- **Separate Point Systems** - VS AI, Multiplayer, and Puzzle mode points
-- **Profile Management** - View stats, achievements, and game history
+### 🔗 Blockchain Integration
+- **Somnia Testnet**: Fully integrated with Somnia blockchain
+- **Smart Contracts**: Deployed on-chain leaderboard and user management
+- **User Registration**: Unique nickname system with blockchain verification
+- **Achievement System**: On-chain achievements and point tracking
+- **Real Leaderboard**: Live ranking system with all players
 
-### Modern UI/UX
-- **Responsive design** - Works perfectly on mobile, tablet, and desktop
-- **Smooth animations** - Powered by Framer Motion
-- **Glassmorphism aesthetic** - Modern, beautiful interface
-- **Dark theme** - Easy on the eyes
-- **Accessible controls** - Keyboard and touch support
+### 🧩 Puzzle System
+- **Multiple Categories**: Elimination, Territory Control, Chain Reactions, Survival
+- **Difficulty Levels**: Beginner to Expert challenges
+- **Dynamic Generation**: Procedurally generated puzzles
+- **Progress Tracking**: Detailed statistics and completion tracking
 
-### Game Modes
-- **Local Multiplayer** - Play with friends on the same device
-- **VS AI** - Challenge our advanced AI with three difficulty levels
-- **Online Multiplayer** - Play with registered players worldwide
-- **Puzzle Mode** - Solve strategic puzzles and challenges
-- **Social Hub** - Connect with friends and find new players
+### 🎨 Modern UI/UX
+- **Responsive Design**: Works on desktop, tablet, and mobile
+- **Smooth Animations**: Framer Motion powered transitions
+- **Dark Theme**: Beautiful gradient-based design
+- **Interactive Elements**: Hover effects and visual feedback
+
+## 🛠️ Technology Stack
+
+### Frontend
+- **React 18** - Modern React with hooks and context
+- **Vite** - Fast build tool and development server
+- **Tailwind CSS** - Utility-first CSS framework
+- **Framer Motion** - Smooth animations and transitions
+- **Zustand** - Lightweight state management
+
+### Blockchain
+- **Ethers.js** - Ethereum/Somnia blockchain interaction
+- **Solidity** - Smart contract development
+- **MetaMask** - Wallet integration
+- **Somnia Testnet** - Blockchain network
+
+### Smart Contracts
+- **GameRegistry.sol** - Main game contract with user management
+- **GameRegistryOptimized.sol** - Optimized version with advanced features
+- **On-chain Leaderboard** - Real-time player rankings
+- **Achievement System** - Blockchain-based achievements
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 16+ 
-- npm or yarn
-- MetaMask browser extension
-- Somnia Network testnet access
+- Node.js 16+ and npm
+- MetaMask wallet
+- Somnia Testnet STT tokens (for gas fees)
 
 ### Installation
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd chain-reaction-game
+   git clone https://github.com/yourusername/somnia-reaction-game.git
+   cd somnia-reaction-game
    ```
 
 2. **Install dependencies**
@@ -57,229 +75,199 @@ A modern, responsive Chain Reaction game built with React and blockchain technol
    npm install
    ```
 
-3. **Configure blockchain (optional)**
-   ```bash
-   # Copy environment file
-   cp .env.example .env
-   
-   # Edit .env with your configuration
-   # See DEPLOYMENT.md for details
-   ```
-
-4. **Start the development server**
+3. **Start development server**
    ```bash
    npm run dev
    ```
 
-5. **Open your browser**
-   Navigate to `http://localhost:3000`
+4. **Open in browser**
+   ```
+   http://localhost:3000
+   ```
 
-### Build for Production
+### Blockchain Setup
 
-```bash
-npm run build
-npm run preview
-```
+1. **Add Somnia Testnet to MetaMask**
+   - Network Name: Somnia Testnet
+   - RPC URL: https://testnet.somnia.network
+   - Chain ID: 50312
+   - Currency Symbol: STT
 
-## 🔗 Blockchain Features
+2. **Get Testnet Tokens**
+   - Visit Somnia testnet faucet
+   - Request STT tokens for gas fees
 
-### User Registration
-- Connect MetaMask wallet to Somnia testnet
-- Register with a unique nickname (3-20 characters)
-- Nicknames are stored on-chain and globally unique
-- Automatic achievement unlocking upon registration
+3. **Connect Wallet**
+   - Click "Connect Wallet" in the game
+   - Register with a unique nickname
+   - Start playing and earning points!
 
-### Social System
-- **Friend Requests** - Send and receive friend requests
-- **User Search** - Find players by nickname
-- **Friend Management** - Accept, reject, or remove friends
-- **Friend Activity** - View friend stats and achievements
-
-### Achievement System
-- **First Steps** - Register your account (10 points)
-- **Social Butterfly** - Add your first friend (50 points)
-- **Puzzle Master** - Complete 10 puzzles (100 points)
-- **Multiplayer Champion** - Win 10 multiplayer games (200 points)
-- **AI Destroyer** - Win 50 games against AI (150 points)
-
-### Tier System
-- **Beginner** (0-499 points)
-- **Advanced** (500-1,999 points)
-- **Expert** (2,000-4,999 points)
-- **Master** (5,000-9,999 points)
-- **Grandmaster** (10,000+ points)
-
-### Point Categories
-- **VS AI Points** - Earned by playing against AI
-- **Multiplayer Points** - Earned in online multiplayer games
-- **Puzzle Points** - Earned by solving puzzles
-- **Total Points** - Sum of all point categories
-
-## 🎯 How to Play
-
-### Objective
-Eliminate all other players by controlling territory and triggering chain reactions. The last player standing wins!
+## 🎮 How to Play
 
 ### Basic Rules
-1. **Place orbs** by clicking on empty cells or your own territory
-2. **Explosions occur** when a cell reaches its capacity (3-5 orbs)
-3. **Chain reactions** happen when explosions trigger more explosions
-4. **Capture territory** by placing orbs on enemy cells
-5. **Elimination** occurs when a player loses all territory and valid moves
+1. **Place Orbs**: Click on empty cells to place your colored orbs
+2. **Critical Mass**: When a cell reaches its critical mass, it explodes
+3. **Chain Reactions**: Explosions can trigger more explosions
+4. **Win Condition**: Eliminate all opponent orbs to win
 
-### Controls
-- **Mouse/Touch**: Click to place orbs
-- **P**: Pause/Resume game
-- **R**: Restart current game
-- **Esc**: Return to main menu
+### Game Modes
+
+#### 🎯 VS AI
+- Play against intelligent AI opponents
+- 5 difficulty levels from Beginner to Grandmaster
+- Earn points and unlock achievements
+- Track your progress and statistics
+
+#### 👥 Local Multiplayer
+- Play with friends on the same device
+- Take turns placing orbs
+- Perfect for local gaming sessions
+
+#### 🌐 Online Multiplayer
+- Play with players worldwide
+- Real-time multiplayer experience
+- Global leaderboard integration
+
+#### 🧩 Puzzle Mode
+- Strategic challenges and scenarios
+- Multiple categories and difficulty levels
+- Learn advanced strategies
+- Earn puzzle-specific achievements
+
+## 📊 Blockchain Features
+
+### User System
+- **Unique Nicknames**: Register with a custom nickname
+- **On-chain Profile**: Your stats stored on blockchain
+- **Achievement Tracking**: Unlock and display achievements
+- **Point System**: Earn points for different game modes
+
+### Leaderboard
+- **Real-time Rankings**: Live leaderboard with all players
+- **Multiple Categories**: VS AI, Puzzle, Total points
+- **Global Competition**: Compete with players worldwide
+- **Achievement Display**: Show off your accomplishments
+
+### Smart Contract Functions
+- `registerUser(nickname)` - Register with unique nickname
+- `updatePoints(vsAi, multiplayer, puzzle)` - Update point totals
+- `updateGameStats(gamesPlayed, gamesWon, ...)` - Track game statistics
+- `unlockAchievement(achievementType)` - Unlock achievements
+- `getLeaderboard()` - Fetch current leaderboard
 
 ## 🏗️ Project Structure
 
 ```
-src/
-├── components/          # React components
-│   ├── MainMenu.jsx    # Main menu interface
-│   ├── LocalGame.jsx   # Local multiplayer setup and game
-│   ├── AIGame.jsx      # AI opponent setup and game
-│   ├── OnlineGame.jsx  # Online multiplayer
-│   ├── GameBoard.jsx   # Game grid and orb rendering
-│   ├── GameUI.jsx      # Game interface and controls
-│   ├── Settings.jsx    # Game settings and preferences
-│   ├── Help.jsx        # Rules and strategy guide
-│   └── blockchain/     # Blockchain-related components
-│       ├── UserRegistration.jsx
-│       ├── SocialFeatures.jsx
-│       └── ProfileAndAchievements.jsx
-├── contexts/           # React context providers
-│   └── GameContext.jsx # Game state management
-├── stores/             # State management
-│   └── gameStore.js    # Zustand store for game logic
-├── services/           # Service layer
-│   └── blockchainService.js # Blockchain interaction service
-├── config/             # Configuration files
-│   └── blockchain.js   # Blockchain configuration
-├── utils/              # Utility functions
-│   ├── gameEngine.js   # Core game mechanics
-│   └── aiEngine.js     # AI opponent logic
-└── contracts/          # Smart contracts
-    └── GameRegistry.sol # Main game contract
-
-contracts/
-└── GameRegistry.sol    # Smart contract for user management
-
-scripts/
-└── deploy.js          # Deployment script
-
-deployments/
-└── deployment.json    # Deployment information
+somnia-reaction-game/
+├── contracts/                 # Smart contracts
+│   ├── GameRegistry.sol      # Main game contract
+│   └── GameRegistryOptimized.sol
+├── src/
+│   ├── components/           # React components
+│   │   ├── blockchain/      # Blockchain-related components
+│   │   ├── puzzles/         # Puzzle game components
+│   │   └── ...
+│   ├── config/              # Configuration files
+│   ├── services/            # Blockchain service
+│   ├── stores/              # State management
+│   ├── utils/               # Utility functions
+│   └── ...
+├── docs/                    # Documentation
+└── README.md
 ```
 
-## 🔧 Smart Contract
-
-### GameRegistry.sol
-The main smart contract that handles:
-- User registration and nickname management
-- Friend system (requests, acceptance, removal)
-- Point tracking and tier progression
-- Achievement system
-- Event emission for frontend integration
-
-### Key Functions
-- `registerUser(string nickname)` - Register with unique nickname
-- `sendFriendRequest(address to)` - Send friend request
-- `acceptFriendRequest(address from)` - Accept friend request
-- `updatePoints(uint256 vsAi, uint256 multiplayer, uint256 puzzle)` - Update points
-- `unlockAchievement(string name)` - Unlock achievement
-
-## 🚀 Deployment
-
-### Smart Contract Deployment
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
-
-### Quick Deployment Steps
-```bash
-# Install Hardhat
-npm install --save-dev hardhat @nomicfoundation/hardhat-toolbox
-
-# Configure environment
-cp .env.example .env
-# Edit .env with your private key and RPC URLs
-
-# Deploy contract
-npx hardhat run scripts/deploy.js --network somniaTestnet
-
-# Update contract address in src/config/blockchain.js
-```
-
-## 🛠️ Development
+## 🔧 Development
 
 ### Available Scripts
-```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run preview      # Preview production build
-npm run test         # Run tests
-npm run lint         # Lint code
-npm run format       # Format code
-```
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
 
-### Adding New Features
-1. **Smart Contract Changes** - Update `contracts/GameRegistry.sol`
-2. **Frontend Integration** - Update `src/services/blockchainService.js`
-3. **UI Components** - Add components in `src/components/blockchain/`
-4. **Configuration** - Update `src/config/blockchain.js`
+### Smart Contract Development
+- Contracts are deployed on Somnia Testnet
+- Use Remix IDE for contract development
+- Contract address: `0x9D46AC88c047F899c188eBdECdaF74C8C2564412`
 
-## 🔐 Security
-
-### Smart Contract Security
-- Input validation for all user inputs
-- Access control for sensitive functions
-- Event emission for transparency
-- Gas optimization for cost efficiency
-
-### Frontend Security
-- Input sanitization and validation
-- Secure wallet connection handling
-- Error handling and user feedback
-- HTTPS enforcement in production
-
-## 📊 Monitoring
-
-### Smart Contract Events
-Monitor these events for game activity:
-- `UserRegistered` - New user registration
-- `FriendRequestSent` - Friend request sent
-- `FriendRequestAccepted` - Friend request accepted
-- `PointsUpdated` - Points updated
-- `AchievementUnlocked` - Achievement unlocked
-- `TierUpgraded` - Tier progression
-
-## 🤝 Contributing
-
+### Contributing
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Add tests if applicable
+4. Test thoroughly
 5. Submit a pull request
+
+## 📱 Screenshots
+
+### Main Menu
+- Beautiful gradient design
+- Blockchain connection status
+- User statistics display
+
+### Game Board
+- Interactive game board
+- Real-time statistics
+- Smooth animations
+
+### Leaderboard
+- Live player rankings
+- Achievement display
+- User profile integration
+
+## 🎯 Roadmap
+
+### Completed ✅
+- [x] Core game mechanics
+- [x] Blockchain integration
+- [x] User registration system
+- [x] On-chain leaderboard
+- [x] Achievement system
+- [x] Puzzle mode
+- [x] AI opponents
+- [x] Responsive design
+
+### In Progress 🚧
+- [ ] Advanced AI strategies
+- [ ] Tournament system
+- [ ] Social features
+- [ ] Mobile app
+
+### Planned 📋
+- [ ] Cross-chain compatibility
+- [ ] NFT integration
+- [ ] Advanced analytics
+- [ ] Community features
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+
+### Development Setup
+1. Fork and clone the repository
+2. Install dependencies: `npm install`
+3. Start development server: `npm run dev`
+4. Make your changes
+5. Test thoroughly
+6. Submit a pull request
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## 🙏 Acknowledgments
 
-- **Documentation**: See [DEPLOYMENT.md](./DEPLOYMENT.md) for deployment help
-- **Issues**: Report bugs and feature requests via GitHub Issues
-- **Discussions**: Join community discussions on GitHub Discussions
+- **Somnia Network** - For providing the blockchain infrastructure
+- **React Team** - For the amazing framework
+- **Tailwind CSS** - For the utility-first CSS framework
+- **Framer Motion** - For smooth animations
+- **Ethers.js** - For blockchain interaction
 
-## 🎉 Acknowledgments
+## 📞 Support
 
-- **Somnia Network** for blockchain infrastructure
-- **React Team** for the amazing framework
-- **Framer Motion** for smooth animations
-- **Tailwind CSS** for beautiful styling
-- **Ethers.js** for Web3 integration
+- **Issues**: [GitHub Issues](https://github.com/yourusername/somnia-reaction-game/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/yourusername/somnia-reaction-game/discussions)
+- **Discord**: [Join our Discord](https://discord.gg/somnia-reaction)
 
 ---
 
-**Built with ❤️ using React, Solidity, and Somnia Network** 
+**Made with ❤️ for the Somnia ecosystem**
+
+*Experience the future of gaming with blockchain integration!*
