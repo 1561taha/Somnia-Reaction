@@ -1,0 +1,428 @@
+#!/usr/bin/env node
+
+import fs from 'fs';
+import path from 'path';
+
+console.log('🚀 Chain Reaction Game - Deployment Setup');
+console.log('==========================================\n');
+
+// Check if .env exists
+if (!fs.existsSync('.env')) {
+  console.log('📝 Creating .env file from template...');
+  
+  const envTemplate = `# Blockchain Configuration
+# Copy this file to .env and fill in your values
+
+# Somnia Network Configuration
+SOMNIA_RPC_URL=https://dream-rpc.somnia.network
+SOMNIA_EXPLORER_URL=https://somnia-devnet.socialscan.io
+
+# Contract Address (update after deployment)
+GAME_REGISTRY_ADDRESS=0x0000000000000000000000000000000000000000
+
+# Deployment Configuration (for Hardhat)
+PRIVATE_KEY=your_deployment_wallet_private_key_here
+
+# Network Details
+CHAIN_ID=50312
+NETWORK_NAME=Somnia Testnet
+TOKEN_SYMBOL=STT
+`;
+
+  fs.writeFileSync('.env', envTemplate);
+  console.log('✅ .env file created successfully!');
+  console.log('⚠️  IMPORTANT: Edit .env and add your private key!\n');
+} else {
+  console.log('✅ .env file already exists\n');
+}
+
+// Check if hardhat.config.js exists
+if (!fs.existsSync('hardhat.config.js')) {
+  console.log('📝 Creating hardhat.config.js...');
+  
+  const hardhatConfig = `require("@nomicfoundation/hardhat-toolbox");
+require("dotenv").config();
+
+/** @type import('hardhat/config').HardhatUserConfig */
+module.exports = {
+  solidity: "0.8.19",
+  networks: {
+    somniaTestnet: {
+      url: "https://dream-rpc.somnia.network",
+      chainId: 50312,
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      gasPrice: 20000000000, // 20 gwei
+    },
+  },
+  etherscan: {
+    apiKey: {
+      somniaTestnet: "not-needed", // Somnia doesn't require API key for verification
+    },
+    customChains: [
+      {
+        network: "somniaTestnet",
+        chainId: 50312,
+        urls: {
+          apiURL: "https://somnia-devnet.socialscan.io/api",
+          browserURL: "https://somnia-devnet.socialscan.io"
+        }
+      }
+    ]
+  }
+};
+`;
+
+  fs.writeFileSync('hardhat.config.js', hardhatConfig);
+  console.log('✅ hardhat.config.js created successfully!\n');
+} else {
+  console.log('✅ hardhat.config.js already exists\n');
+}
+
+// Check if contracts directory exists
+if (!fs.existsSync('contracts')) {
+  console.log('📝 Creating contracts directory...');
+  fs.mkdirSync('contracts');
+  console.log('✅ contracts directory created!\n');
+} else {
+  console.log('✅ contracts directory already exists\n');
+}
+
+// Check if GameRegistry.sol exists
+if (!fs.existsSync('contracts/GameRegistry.sol')) {
+  console.log('📝 Creating GameRegistry.sol contract...');
+  
+  const contractContent = `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+contract GameRegistry {
+    struct User {
+        string nickname;
+        uint256 registrationTime;
+        uint256 totalPoints;
+        uint256 vsAiPoints;
+        uint256 multiplayerPoints;
+        uint256 puzzlePoints;
+        uint256 gamesPlayed;
+        uint256 gamesWon;
+        bool isRegistered;
+    }
+
+    struct FriendRequest {
+        address from;
+        uint256 timestamp;
+        bool isActive;
+    }
+
+    struct Achievement {
+        string name;
+        string description;
+        uint256 points;
+        bool isUnlocked;
+        uint256 unlockTime;
+    }
+
+    // State variables
+    mapping(address => User) public users;
+    mapping(string => address) public nicknameToAddress;
+    mapping(address => address[]) public friends;
+    mapping(address => mapping(address => bool)) public isFriend;
+    mapping(address => FriendRequest[]) public friendRequests;
+    mapping(address => Achievement[]) public achievements;
+    mapping(address => uint256) public userTier;
+
+    // Events
+    event UserRegistered(address indexed user, string nickname);
+    event FriendRequestSent(address indexed from, address indexed to);
+    event FriendRequestAccepted(address indexed from, address indexed to);
+    event FriendRequestRejected(address indexed from, address indexed to);
+    event PointsUpdated(address indexed user, uint256 totalPoints, uint256 vsAiPoints, uint256 multiplayerPoints, uint256 puzzlePoints);
+    event AchievementUnlocked(address indexed user, string achievementName);
+    event TierUpgraded(address indexed user, uint256 newTier);
+
+    // Modifiers
+    modifier onlyRegistered() {
+        require(users[msg.sender].isRegistered, "User not registered");
+        _;
+    }
+
+    modifier nicknameAvailable(string memory _nickname) {
+        require(nicknameToAddress[_nickname] == address(0), "Nickname already taken");
+        _;
+    }
+
+    modifier validNickname(string memory _nickname) {
+        require(bytes(_nickname).length >= 3 && bytes(_nickname).length <= 20, "Nickname must be 3-20 characters");
+        require(isValidNickname(_nickname), "Nickname contains invalid characters");
+        _;
+    }
+
+    // Core functions
+    function registerUser(string memory _nickname) external validNickname(_nickname) nicknameAvailable(_nickname) {
+        require(!users[msg.sender].isRegistered, "User already registered");
+        
+        users[msg.sender] = User({
+            nickname: _nickname,
+            registrationTime: block.timestamp,
+            totalPoints: 0,
+            vsAiPoints: 0,
+            multiplayerPoints: 0,
+            puzzlePoints: 0,
+            gamesPlayed: 0,
+            gamesWon: 0,
+            isRegistered: true
+        });
+
+        nicknameToAddress[_nickname] = msg.sender;
+        userTier[msg.sender] = 1;
+
+        // Initialize default achievements
+        initializeAchievements(msg.sender);
+
+        emit UserRegistered(msg.sender, _nickname);
+    }
+
+    function sendFriendRequest(address _to) external onlyRegistered {
+        require(_to != msg.sender, "Cannot send request to yourself");
+        require(users[_to].isRegistered, "User not registered");
+        require(!isFriend[msg.sender][_to], "Already friends");
+        require(!hasActiveRequest(msg.sender, _to), "Request already sent");
+
+        friendRequests[_to].push(FriendRequest({
+            from: msg.sender,
+            timestamp: block.timestamp,
+            isActive: true
+        }));
+
+        emit FriendRequestSent(msg.sender, _to);
+    }
+
+    function acceptFriendRequest(address _from) external onlyRegistered {
+        require(hasActiveRequest(_from, msg.sender), "No active request from this user");
+        
+        // Remove the request
+        removeFriendRequest(_from, msg.sender);
+        
+        // Add to friends list
+        friends[msg.sender].push(_from);
+        friends[_from].push(msg.sender);
+        isFriend[msg.sender][_from] = true;
+        isFriend[_from][msg.sender] = true;
+
+        emit FriendRequestAccepted(_from, msg.sender);
+    }
+
+    function rejectFriendRequest(address _from) external onlyRegistered {
+        require(hasActiveRequest(_from, msg.sender), "No active request from this user");
+        
+        removeFriendRequest(_from, msg.sender);
+        emit FriendRequestRejected(_from, msg.sender);
+    }
+
+    function removeFriend(address _friend) external onlyRegistered {
+        require(isFriend[msg.sender][_friend], "Not friends");
+        
+        // Remove from both friends lists
+        removeFromFriendsList(msg.sender, _friend);
+        removeFromFriendsList(_friend, msg.sender);
+        
+        isFriend[msg.sender][_friend] = false;
+        isFriend[_friend][msg.sender] = false;
+    }
+
+    function updatePoints(uint256 _vsAiPoints, uint256 _multiplayerPoints, uint256 _puzzlePoints) external onlyRegistered {
+        User storage user = users[msg.sender];
+        user.vsAiPoints = _vsAiPoints;
+        user.multiplayerPoints = _multiplayerPoints;
+        user.puzzlePoints = _puzzlePoints;
+        user.totalPoints = _vsAiPoints + _multiplayerPoints + _puzzlePoints;
+
+        // Update tier based on total points
+        updateTier(msg.sender, user.totalPoints);
+
+        emit PointsUpdated(msg.sender, user.totalPoints, _vsAiPoints, _multiplayerPoints, _puzzlePoints);
+    }
+
+    function updateGameStats(uint256 _gamesPlayed, uint256 _gamesWon) external onlyRegistered {
+        User storage user = users[msg.sender];
+        user.gamesPlayed = _gamesPlayed;
+        user.gamesWon = _gamesWon;
+    }
+
+    function unlockAchievement(string memory _achievementName) external onlyRegistered {
+        Achievement[] storage userAchievements = achievements[msg.sender];
+        
+        for (uint i = 0; i < userAchievements.length; i++) {
+            if (keccak256(bytes(userAchievements[i].name)) == keccak256(bytes(_achievementName))) {
+                if (!userAchievements[i].isUnlocked) {
+                    userAchievements[i].isUnlocked = true;
+                    userAchievements[i].unlockTime = block.timestamp;
+                    
+                    // Add achievement points to total
+                    users[msg.sender].totalPoints += userAchievements[i].points;
+                    
+                    emit AchievementUnlocked(msg.sender, _achievementName);
+                }
+                break;
+            }
+        }
+    }
+
+    // View functions
+    function getUser(address _user) external view returns (User memory) {
+        return users[_user];
+    }
+
+    function getUserByNickname(string memory _nickname) external view returns (User memory) {
+        address userAddress = nicknameToAddress[_nickname];
+        require(userAddress != address(0), "User not found");
+        return users[userAddress];
+    }
+
+    function getFriends(address _user) external view returns (address[] memory) {
+        return friends[_user];
+    }
+
+    function getFriendRequests(address _user) external view returns (FriendRequest[] memory) {
+        return friendRequests[_user];
+    }
+
+    function getAchievements(address _user) external view returns (Achievement[] memory) {
+        return achievements[_user];
+    }
+
+    function searchUsersByNickname(string memory _partialNickname) external view returns (address[] memory) {
+        // This is a simplified search - in production, you might want to use events or off-chain indexing
+        address[] memory results = new address[](10); // Limit to 10 results
+        uint256 resultCount = 0;
+        
+        // Note: This is not efficient for large datasets. In production, use events or off-chain indexing
+        // This is just a placeholder implementation
+        return results;
+    }
+
+    // Helper functions
+    function hasActiveRequest(address _from, address _to) internal view returns (bool) {
+        FriendRequest[] storage requests = friendRequests[_to];
+        for (uint i = 0; i < requests.length; i++) {
+            if (requests[i].from == _from && requests[i].isActive) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function removeFriendRequest(address _from, address _to) internal {
+        FriendRequest[] storage requests = friendRequests[_to];
+        for (uint i = 0; i < requests.length; i++) {
+            if (requests[i].from == _from && requests[i].isActive) {
+                requests[i].isActive = false;
+                break;
+            }
+        }
+    }
+
+    function removeFromFriendsList(address _user, address _friend) internal {
+        address[] storage userFriends = friends[_user];
+        for (uint i = 0; i < userFriends.length; i++) {
+            if (userFriends[i] == _friend) {
+                userFriends[i] = userFriends[userFriends.length - 1];
+                userFriends.pop();
+                break;
+            }
+        }
+    }
+
+    function updateTier(address _user, uint256 _totalPoints) internal {
+        uint256 newTier = 1;
+        if (_totalPoints >= 10000) newTier = 5;
+        else if (_totalPoints >= 5000) newTier = 4;
+        else if (_totalPoints >= 2000) newTier = 3;
+        else if (_totalPoints >= 500) newTier = 2;
+
+        if (newTier > userTier[_user]) {
+            userTier[_user] = newTier;
+            emit TierUpgraded(_user, newTier);
+        }
+    }
+
+    function initializeAchievements(address _user) internal {
+        Achievement[] storage userAchievements = achievements[_user];
+        
+        userAchievements.push(Achievement({
+            name: "First Steps",
+            description: "Register your account",
+            points: 10,
+            isUnlocked: true,
+            unlockTime: block.timestamp
+        }));
+
+        userAchievements.push(Achievement({
+            name: "Social Butterfly",
+            description: "Add your first friend",
+            points: 50,
+            isUnlocked: false,
+            unlockTime: 0
+        }));
+
+        userAchievements.push(Achievement({
+            name: "Puzzle Master",
+            description: "Complete 10 puzzles",
+            points: 100,
+            isUnlocked: false,
+            unlockTime: 0
+        }));
+
+        userAchievements.push(Achievement({
+            name: "Multiplayer Champion",
+            description: "Win 10 multiplayer games",
+            points: 200,
+            isUnlocked: false,
+            unlockTime: 0
+        }));
+
+        userAchievements.push(Achievement({
+            name: "AI Destroyer",
+            description: "Win 50 games against AI",
+            points: 150,
+            isUnlocked: false,
+            unlockTime: 0
+        }));
+    }
+
+    function isValidNickname(string memory _nickname) internal pure returns (bool) {
+        bytes memory nicknameBytes = bytes(_nickname);
+        for (uint i = 0; i < nicknameBytes.length; i++) {
+            bytes1 char = nicknameBytes[i];
+            if (!((char >= 0x30 && char <= 0x39) || // 0-9
+                  (char >= 0x41 && char <= 0x5A) || // A-Z
+                  (char >= 0x61 && char <= 0x7A) || // a-z
+                  char == 0x5F)) { // underscore
+                return false;
+            }
+        }
+        return true;
+    }
+}`;
+
+  fs.writeFileSync('contracts/GameRegistry.sol', contractContent);
+  console.log('✅ GameRegistry.sol contract created successfully!\n');
+} else {
+  console.log('✅ GameRegistry.sol contract already exists\n');
+}
+
+console.log('🎯 Next Steps:');
+console.log('===============');
+console.log('1. Edit .env file and add your private key');
+console.log('2. Install Hardhat dependencies: npm install --save-dev hardhat @nomicfoundation/hardhat-toolbox dotenv');
+console.log('3. Add Somnia Testnet to MetaMask:');
+console.log('   - Network Name: Somnia Testnet');
+console.log('   - RPC URL: https://dream-rpc.somnia.network');
+console.log('   - Chain ID: 50312');
+console.log('   - Currency Symbol: STT');
+console.log('   - Explorer: https://somnia-devnet.socialscan.io');
+console.log('4. Get some STT test tokens for gas fees');
+console.log('5. Deploy the contract: npx hardhat run scripts/deploy.js --network somniaTestnet');
+console.log('6. Update the contract address in src/config/blockchain.js');
+console.log('7. Start the application: npm run dev');
+console.log('\n📖 For detailed instructions, see: SMART_CONTRACT_DEPLOYMENT_GUIDE.md');
+console.log('\n🎉 Setup completed! Happy deploying! 🚀⛓️'); 

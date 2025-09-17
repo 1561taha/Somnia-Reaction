@@ -1,0 +1,294 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #1e293b 75%, #0f172a 100%);
+    background-attachment: fixed;
+    color: #f8fafc;
+  }
+
+  body {
+    background: transparent;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #f8fafc;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 focus:ring-blue-500 shadow-lg hover:shadow-xl;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 6px 25px rgba(59, 130, 246, 0.4);
+    transform: translateY(-1px) scale(1.05);
+  }
+
+  .btn-secondary {
+    @apply bg-gradient-to-r from-slate-700 to-slate-800 text-white hover:from-slate-600 hover:to-slate-700 focus:ring-slate-500 border border-slate-600 hover:border-slate-500 shadow-lg;
+  }
+
+  .card {
+    @apply bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-md rounded-xl border border-slate-700/50 shadow-2xl p-6;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  .modal {
+    @apply fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50;
+  }
+
+  .modal-content {
+    @apply card max-w-md w-full;
+    animation: modalSlideIn 0.2s ease-out;
+  }
+
+  /* Enhanced Orb Styles */
+  .orb {
+    @apply rounded-full border-2 shadow-lg transition-all duration-300 relative overflow-hidden;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), transparent 50%),
+                radial-gradient(circle at center, currentColor, transparent);
+    box-shadow: 
+      0 0 10px currentColor,
+      0 4px 8px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .orb::before {
+    content: '';
+    position: absolute;
+    top: 15%;
+    left: 20%;
+    width: 30%;
+    height: 30%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8), transparent);
+    border-radius: 50%;
+    transform: rotate(-15deg);
+  }
+
+  .orb:hover {
+    transform: scale(1.1);
+    box-shadow: 
+      0 0 20px currentColor,
+      0 6px 12px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+
+  .orb-exploding {
+    animation: explosion 0.6s ease-out forwards;
+  }
+
+  .orb-chain-reaction {
+    animation: chainReaction 0.8s ease-out forwards;
+  }
+
+  .orb-float {
+    animation: orbFloat 2s ease-in-out infinite;
+  }
+
+  /* Game Cell Styles */
+  .game-cell {
+    @apply rounded-lg border-2 transition-all duration-300 relative;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.6));
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  .game-cell:hover {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(30, 41, 59, 0.8));
+    border-color: rgba(59, 130, 246, 0.6);
+    box-shadow: 
+      inset 0 1px 3px rgba(0, 0, 0, 0.3),
+      0 0 15px rgba(59, 130, 246, 0.3);
+  }
+
+  .game-cell.owned {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.7));
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Player Indicator */
+  .player-indicator {
+    @apply flex items-center gap-3 p-3 rounded-lg transition-all duration-200 border border-transparent;
+    background: rgba(30, 41, 59, 0.5);
+  }
+
+  .player-indicator.active {
+    @apply border-blue-500/50 bg-blue-900/20;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+
+  .player-indicator.eliminated {
+    @apply opacity-50 grayscale;
+    background: rgba(15, 23, 42, 0.3);
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+
+  /* Enhanced Explosion Effects */
+  .explosion-ring {
+    animation: explosionRing 0.6s ease-out forwards;
+  }
+
+  .explosion-particle {
+    animation: explosionParticle 0.8s ease-out forwards;
+  }
+
+  .chain-reaction-indicator {
+    animation: chainReactionGlow 1s ease-in-out infinite;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .glass {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Enhanced Keyframe Animations */
+@keyframes modalSlideIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes explosion {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  30% {
+    transform: scale(1.8) rotate(90deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(3) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+@keyframes chainReaction {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    transform: scale(2) rotate(180deg);
+    opacity: 0.9;
+    filter: hue-rotate(90deg);
+  }
+  100% {
+    transform: scale(0) rotate(360deg);
+    opacity: 0;
+    filter: hue-rotate(180deg);
+  }
+}
+
+@keyframes orbFloat {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.02);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
+  }
+}
+
+@keyframes explosionRing {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+@keyframes explosionParticle {
+  0% {
+    transform: scale(1) translate(0, 0);
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(0) translate(var(--particle-x, 0), var(--particle-y, 0));
+    opacity: 0;
+  }
+}
+
+@keyframes chainReactionGlow {
+  0%, 100% {
+    filter: brightness(1) saturate(1);
+  }
+  50% {
+    filter: brightness(1.3) saturate(1.5);
+  }
+}
+
+/* Responsive Orb Sizes */
+@media (max-width: 640px) {
+  .orb {
+    min-width: 12px;
+    min-height: 12px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .orb {
+    min-width: 16px;
+    min-height: 16px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .orb {
+    min-width: 20px;
+    min-height: 20px;
+  }
+} 
